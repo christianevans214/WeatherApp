@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style type="text/css" media="screen">
+		
+		body {
+			position: absolute;
+			font-family: Helvetica;
+			margin: 100px auto;
+			text-align: center;
+			height: 80px;
+			width: 462px;
+		}
+		div {
+
+		}
+
+
+		</style>
+	</head>
+
+
+	<body>
+	<div> <p>{{location}}<br> {{weatherDescription}} </p> 
+		<form action = "/" method="POST">
+			<input type ="text" placeholder = "Enter a zip-code" id = "zipcode" name = "zipcode">
+			<input type = "submit" value= "Get weather" class = "button">
+		</form>
+	</div>
+	</body>
+</html>
