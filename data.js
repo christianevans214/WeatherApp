@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-
+//deals with processing the zip code data and providing access to the town and latitude/longitude associated with each zipcode in US
 
 var zipData = fs.readFileSync("zipcode.csv", "utf-8");
 //parses zipcode data and returns an object of arrays with latitude/longitude string and city string. 

@@ -1,13 +1,8 @@
-
+//routes server based on URL sub-directory.
 var profile= require("./profileTest.js");
 var render = require("./render");
 var querystring = require("querystring");
 var data = require("./data");
-
-/*var dun = new profile.GetWeather(12804);
-dun.on("end", function(dunProfile){
-	console.log(dunProfile.currently.summary);
-});*/
 
 
 
@@ -17,7 +12,8 @@ function home(request, response){
 		render.view("header", {}, response);
 		render.view("body", {}, response);
 		response.end();
-	} else {
+	} 
+	else if (request.method.toLowerCase() === "post"){
 		//if url == "/" && POST
 		request.on("data", function(postBody){
 			var query = querystring.parse(postBody.toString())
@@ -37,19 +33,27 @@ function zip(request, response){
 			render.view("header", {}, response);
 
 			//get JSON from forecast.io
-			var weatherProfile = new profile.GetWeather(zipCode);
+			try{
+				var weatherProfile = new profile.GetWeather(zipCode);
+				weatherProfile.on("end", function(weatherJSON){
+						var description = "It's currently " + Math.round(weatherJSON.currently.temperature) + "&deg;F. The forecast is " + weatherJSON.currently.summary.toLowerCase() + ", with a " + Math.round(weatherJSON.currently.precipProbability*100) + "% chance of precipitation";
+						var values = {
+						location: data.retrieveTown(zipCode), 
+						weatherDescription: description
+						};
+						render.view("search", values, response);
+						render.view("body", {}, response);
+						response.end();
 
-			weatherProfile.on("end", function(weatherJSON){
-					var description = "It's currently " + Math.round(weatherJSON.currently.temperature) + "&deg;F. The forecast is " + weatherJSON.currently.summary.toLowerCase() + ", with a " + weatherJSON.currently.precipProbability*100 + "% chance of precipitation";
-					var values = {
-					location: data.retrieveTown(zipCode), 
-					weatherDescription: description
-					};
-					render.view("search", values, response);
-					render.view("body", {}, response);
-					response.end();
+				})
+			}
+			catch(e){
+				console.log(e.message);
 
-			})
+				render.view("body", {}, response);
+				render.view("error", {}, response);
+				response.end();
+			}
 
 			}
 
